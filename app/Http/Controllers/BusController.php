@@ -15,19 +15,19 @@ class BusController extends Controller
     {
         //
     }
-    public function createNewBus(Request $request)
+    public function createNewBus(Request $request, $id)
     {
         $response = $this->validate($request, [
                 'bus_product_name' => 'required',
                 'bus_plate_no' => 'required',
-                'driver_id' => 'required'
+               // 'driver_id' => 'required'
         ]
         );
         
         $bus = new Bus();
         $bus->bus_product_name = $request->bus_product_name;
         $bus->bus_plate_no= $request->bus_plate_no;
-        $bus->driver_id= $request->driver_id;
+        $bus->driver_id= Driver::find($id)->id;
         $bus->save();
         
         if($report->save()){

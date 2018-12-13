@@ -2,9 +2,8 @@
 namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
-use App\User_subscription;
+use App\Card;
 use Validator;
-use Carbon\Carbon;
 
 class CardController extends Controller
 {
@@ -17,14 +16,17 @@ class CardController extends Controller
     {
         //
     }
+
+
     public function createCard(Request $request, $id)
     {
         
         $validator = Validator::make($request->all(), [
-                'tariff_plan' => 'required',
-                //'start_date' => 'required',
-                // 'end_date' => 'required',
-                'amount' => 'required',
+                'card_number' => 'required|unique:cards',
+                'card_holder_name' => 'required',
+                'expiry_month' => 'required',
+                'expiry_year' => 'required',
+                'cvv' => 'required',
         ]);
 
         if($validator->fails()){
@@ -35,43 +37,48 @@ class CardController extends Controller
             return $response;
         }else{
               
-                $user_subscription = new User_subscription();
-                $user_subscription->tariff_plan = $request->tariff_plan;
-                $user_subscription->start_date= Carbon::now();
-                $user_subscription->end_date= Carbon::now()->addMonths($request->tariff_plan);
-                $user_subscription->amount= $request->amount;
-                $user_subscription->user_id= User::find($id)->id;
+                $card = new Card();
+                $card->card_number = $request->card_number;
+                $card->card_holder_name= $request->card_holder_name;
+                $card->expiry_month= $request->expiry_month;
+                $card->expiry_year= $request->expiry_year;
+                $card->cvv= $request->cvv;
+                $card->user_id= User::find($id)->id;
             
-                $user_subscription->save();
+                $card->save();
                
             }
          
         
-        if($user_subscription->save()){
-            $user_subscription = response()->json(
+        if($card->save()){
+           return $reponse = response()->json(
                 [
-                    'subscription' => [
+                    'card_status' => [
                         'posted' => true,
                         'status' => 200,
-                        'message' => 'Subscription successful',
-                        'tariff_plan_in_month'=> $user_subscription->tariff_plan,
-                        'subscription_details' => $user_subscription
+                        'message' => 'Saved successfully',
                         
                         ]
                 ], 201);
-                return $user_subscription;
+                
         }else{
-            $response = response()->json(
+          return  $response = response()->json(
                 [
                     'response' => [
                         'posted' => false,
-                        'customized_message' => 'Subscription UNSUCCESSFUL',
+                        'message' => 'UNSUCCESSFUL',
                         'status' => 401
                         ]
                 ], 401);
-                return $response;
+          
         }
         
+    }
+
+    public function getCards($id){
+        $user_cards = User::find($id)->cards()->get();
+        return $user_cards;
+
     }
 }
 

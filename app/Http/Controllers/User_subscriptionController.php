@@ -48,7 +48,7 @@ class User_subscriptionController extends Controller
          
         
         if($user_subscription->save()){
-            $user_subscription = response()->json(
+            $response = response()->json(
                 [
                     'subscription' => [
                         'posted' => true,
@@ -59,7 +59,7 @@ class User_subscriptionController extends Controller
                         
                         ]
                 ], 201);
-                return $user_subscription;
+                return $response;
         }else{
             $response = response()->json(
                 [
