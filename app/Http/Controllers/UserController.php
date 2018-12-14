@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class UserController extends Controller{
@@ -40,28 +44,32 @@ class UserController extends Controller{
 
                     $hasher = app()->make('hash');
 
-                    $register = new User();
-                    $register->full_name = $request->full_name;
-                    $register->user_name = $request->user_name;
-                    $register->email = $request->email;
-                    $register->phone_number = $request->phone_number;
-                    $register->password = $hasher->make($request->password);
+                    $user = new User();
+                    $user->full_name = $request->full_name;
+                    $user->user_name = $request->user_name;
+                    $user->email = $request->email;
+                    $user->phone_number = $request->phone_number;
+                    $user->password = $hasher->make($request->password);
                     $filename = '';
 
                     if($request->hasFile('profile_pix')){
                         $profile_pix = $request->file('profile_pix');
                         $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/drivers/' . $filename ) );
+                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/profiles/users/' . $filename ) );
                     }
                         
-                    $register->profile_pix = $filename;
-                 
-                    $register->save();
+                    $user->profile_pix = $filename;
+                    $token = JWTAuth::fromUser($user);
+                    $user->save();
 
+                 
+
+                    //return response()->json(compact('user','token'),201);
                     return json_encode([
                                         'status'=>200,
                                         'registered'=>true,
-                                        'user_data'=>$register,
+                                        'user_data'=>$user,
+                                        'token' => $token
                                        
                                         ]);     
                 }catch(\Illuminate\Database\QueryException $ex){
@@ -73,8 +81,31 @@ class UserController extends Controller{
                 }
             }
         }
-    
+    //GEtting user that has been authenticated
+        // public function getAuthenticatedUser()
+        // {
+        //         try {
 
+        //                 if (! $user = JWTAuth::parseToken()->authenticate()) {
+        //                         return response()->json(['user_not_found'], 404);
+        //                 }
+
+        //         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+        //                 return response()->json(['token_expired'], $e->getStatusCode());
+
+        //         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+        //                 return response()->json(['token_invalid'], $e->getStatusCode());
+
+        //         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+        //                 return response()->json(['token_absent'], $e->getStatusCode());
+
+        //         }
+
+        //         return response()->json(compact('user'));
+        // }
     public function updatePix(Request $request, $id){
         $user = User::find($id);
       
@@ -95,7 +126,7 @@ class UserController extends Controller{
             if(($request->hasFile('profile_pix')&&($user))){
                 $profile_pix = $request->file('profile_pix');
                 $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                $filepath = storage_path('public/uploads/drivers/' . $filename);
+                $filepath = storage_path('public/uploads/profiles/users/' . $filename);
                 Image::make($profile_pix)->resize(300, 300)->save( $filepath );
 
                 $user->profile_pix = $filename;

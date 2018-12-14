@@ -94,7 +94,7 @@ class ReportController extends Controller
     //     return ($driverReport);   
     // }
 
-    public function createNewUserReport(Request $request)
+    public function createNewUserReport(Request $request, $id)
     {
 
         $validator = Validator::make($request->all(), [

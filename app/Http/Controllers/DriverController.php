@@ -103,7 +103,7 @@ class DriverController extends Controller{
                     if($request->hasFile('profile_pix')){
                         $profile_pix = $request->file('profile_pix');
                         $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/drivers/' . $filename ) );
+                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/profiles/drivers/' . $filename ) );
                     }
                         
                     $register->profile_pix = $filename;
@@ -176,7 +176,7 @@ class DriverController extends Controller{
             if($request->hasFile('profile_pix')){
                 $profile_pix = $request->file('profile_pix');
                 $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                $filepath = storage_path('public/uploads/drivers/' . $filename);
+                $filepath = storage_path('public/uploads/profiles/drivers/' . $filename);
                 Image::make($profile_pix)->resize(300, 300)->save( $filepath );
 
                 $driver->profile_pix = $filename;

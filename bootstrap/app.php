@@ -83,6 +83,7 @@ $app->routeMiddleware([
     //'auth'        => App\Http\Middleware\Authenticate::class,
     'jwt.auth'    => Tymon\JWTAuth\Middleware\GetUserFromToken::class,
     'jwt.refresh' => Tymon\JWTAuth\Middleware\RefreshToken::class,
+    //'jwt.verify' =>  App\Http\Middleware\JwtMiddleware::class,
 ]);
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class
