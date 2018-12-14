@@ -46,6 +46,15 @@ class UserController extends Controller{
                     $register->email = $request->email;
                     $register->phone_number = $request->phone_number;
                     $register->password = $hasher->make($request->password);
+                    $filename = '';
+
+                    if($request->hasFile('profile_pix')){
+                        $profile_pix = $request->file('profile_pix');
+                        $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
+                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/drivers/' . $filename ) );
+                    }
+                        
+                    $register->profile_pix = $filename;
                  
                     $register->save();
 

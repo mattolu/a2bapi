@@ -24,7 +24,8 @@ $router->get('/key', function() {
 //Register
 $router->post('/driver/register', 'DriverController@createNewDriver');
 //Login
-$router->post('/driver/login', 'LoginController@driverLogin');
+//$router->post('/driver/login', 'LoginController@driverLogin');
+$router->post('/driver/login', 'DriverLogin@driverLogin');
 //Attach bus to a driver
 $router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
 //Get reports
@@ -36,7 +37,7 @@ $router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
 //Register
 $router->post('/user/register', 'UserController@createNewUser');
 //Login
-$router->post('/user/login', 'LoginController@userLogin');
+$router->post('/user/login', 'UserLogin@userLogin');
 //Get reports
 //$router->get('/userreports/{user_id}', 'ReportCOntroller@getUserReports');
 

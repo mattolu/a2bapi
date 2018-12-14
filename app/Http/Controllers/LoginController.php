@@ -6,7 +6,9 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
- 
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+
 class LoginController extends Controller
 {
 
@@ -16,110 +18,129 @@ class LoginController extends Controller
      */
     // protected $jwt;
 
-    public function __construct(JWTAuth $jwt)
-    {
-        $this->jwt = $jwt;
-    }
+    // public function __construct(JWTAuth $jwt)
+    // {
+    //     $this->jwt = $jwt;
+    // }
 
-    public function driverLogin(Request $request)
-    {
-        $this->validate($request, [
-            'email'    => 'required',
-            'password' => 'required',
-        ]);
 
-        try {
-            Config::set('jwt.user', 'App\Driver'); 
-            Config::set('auth.providers.users.model', \App\Driver::class);
-            $token = $this->jwt->attempt($request->only('email', 'password'));
-            if (!$token) {
-                return json_encode([
-                    'status'=>false,
-                    'message'=>'Driver not found',
+    /**
+ * Sets the guard to be used during authentication.
+ *
+ * @var string|null
+ */
+protected $guard = null;
+
+// All your usually authentication methods using `$this->guard()`
+
+/**
+ * Gets the guard to be used during authentication.
+ *
+ * @return \Illuminate\Contracts\Auth\StatefulGuard
+ */
+protected function guard()
+{
+    return Auth::guard($this->guard);
+}
+    // public function driverLogin(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'email'    => 'required',
+    //         'password' => 'required',
+    //     ]);
+
+    //     try {
+    //         //app('config')->set('jwt.user', 'App\Driver'); 
+    //         app('config')->set('auth.providers.users.model', \App\Driver::class);
+    //         $token = $this->jwt->attempt($request->only('email', 'password'));
+    //         if (!$token) {
+    //             return json_encode([
+    //                 'status'=>false,
+    //                 'message'=>'Driver not found',
                     
-                  ], 404); 
+    //               ], 404); 
                
-            }
+    //         }
 
-        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return json_encode([
-                'status'=>false,
-                'message'=>'Token Expired',
+    //     } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    //         return json_encode([
+    //             'status'=>false,
+    //             'message'=>'Token Expired',
                 
-              ], 500); 
+    //           ], 500); 
 
-        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return json_encode([
-                'status'=>false,
-                'message'=>'Token Invaid',
+    //     } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+    //         return json_encode([
+    //             'status'=>false,
+    //             'message'=>'Token Invaid',
                 
-              ], 500); 
-        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return json_encode([
-                'status'=>'Token not present',
-                'message'=>$e->getMessage(),
+    //           ], 500); 
+    //     } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+    //         return json_encode([
+    //             'status'=>'Token not present',
+    //             'message'=>$e->getMessage(),
                 
-              ], 500); 
+    //           ], 500); 
          
-        }
+    //     }
               
-                return json_encode([
-                                        'status'=>true,
-                                        'message'=>'Successfully logged in',
-                                        'token'=> $token
-                                      ], 200); 
+    //             return json_encode([
+    //                                     'status'=>true,
+    //                                     'message'=>'Successfully logged in',
+    //                                     'token'=> $token
+    //                                   ], 200); 
  
-    }
+    // }
 
-    public function userLogin(Request $request)
-    {
-        $this->validate($request, [
-            'email'    => 'required',
-            'password' => 'required',
-        ]);
+    // public function userLogin(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'email'    => 'required',
+    //         'password' => 'required',
+    //     ]);
 
-        try {
-            app('config')->set('jwt.user', 'App\User'); 
-            app('config')->set('auth.providers.users.model', \App\User::class);
-            $token = $this->jwt->attempt($request->only('email', 'password'));
-            if (!$token) {
-                return json_encode([
-                    'status'=>false,
-                    'message'=>'Driver not found',
+    //     try {
+    //         app('config')->set('jwt.user', 'App\User'); 
+    //         app('config')->set('auth.providers.users.model', \App\User::class);
+    //         $token = $this->jwt->attempt($request->only('email', 'password'));
+    //         if (!$token) {
+    //             return json_encode([
+    //                 'status'=>false,
+    //                 'message'=>'Driver not found',
                     
-                  ], 404); 
+    //               ], 404); 
                
-            }
+    //         }
 
-        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return json_encode([
-                'status'=>false,
-                'message'=>'Token Expired',
+    //     } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+    //         return json_encode([
+    //             'status'=>false,
+    //             'message'=>'Token Expired',
                 
-              ], 500); 
+    //           ], 500); 
 
-        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return json_encode([
-                'status'=>false,
-                'message'=>'Token Invaid',
+    //     } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+    //         return json_encode([
+    //             'status'=>false,
+    //             'message'=>'Token Invaid',
                 
-              ], 500); 
-        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return json_encode([
-                'status'=>'Token not present',
-                'message'=>$e->getMessage(),
+    //           ], 500); 
+    //     } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+    //         return json_encode([
+    //             'status'=>'Token not present',
+    //             'message'=>$e->getMessage(),
                 
-              ], 500); 
+    //           ], 500); 
          
-        }
+    //     }
               
-                return json_encode([
-                                        'status'=>true,
-                                        'message'=>'Successfully logged in',
-                                        'token'=> $token
-                                      ], 200); 
+    //             return json_encode([
+    //                                     'status'=>true,
+    //                                     'message'=>'Successfully logged in',
+    //                                     'token'=> $token
+    //                                   ], 200); 
  
-    }
+    // }
     
 //PASSWORD RESET GOES HERE
     // public function recoverPassword(){

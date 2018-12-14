@@ -98,6 +98,8 @@ class DriverController extends Controller{
                     //     $img_path = '/driver_img/' . $_name;
                     // }
 
+                    $filename = '';
+
                     if($request->hasFile('profile_pix')){
                         $profile_pix = $request->file('profile_pix');
                         $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
