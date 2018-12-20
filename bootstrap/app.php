@@ -81,9 +81,8 @@ $app->singleton(
 
 $app->routeMiddleware([
     //'auth'        => App\Http\Middleware\Authenticate::class,
-    'jwt.auth'    => Tymon\JWTAuth\Middleware\GetUserFromToken::class,
-    'jwt.refresh' => Tymon\JWTAuth\Middleware\RefreshToken::class,
-    //'jwt.verify' =>  App\Http\Middleware\JwtMiddleware::class,
+        'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+       
 ]);
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class
@@ -101,9 +100,9 @@ $app->middleware([
 |
 */
 
-$app->register(App\Providers\AppServiceProvider::class);
+//$app->register(App\Providers\AppServiceProvider::class);
 $app->register(Intervention\Image\ImageServiceProvider::class);
-$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+//$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 

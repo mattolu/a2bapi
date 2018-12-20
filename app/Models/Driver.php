@@ -1,20 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class Driver extends Model implements JWTSubject, AuthenticatableContract, AuthorizableContract
+class Driver extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
-
-
+    //protected $guard = 'driver';
     /**
      * The attributes that are mass assignable.
      *
@@ -40,7 +38,8 @@ class Driver extends Model implements JWTSubject, AuthenticatableContract, Autho
      */
     public function reports() 
     {
-        return $this->hasMany('App\Report');
+        // return $this->hasMany('App\Report');
+        return $this->hasMany(Report::class);
     }
 
     public function bus() 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
 
-class Card extends Model
+class Report extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,16 +13,17 @@ class Card extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'card_number', 'card_holder_name', 'expiry_month', 'expiry_year','cvv',
+        'accident_address', 'accident_report', 'driver_id',
     ];
 
    /**
-     * A card belongs to a User
+     * A report belongs to a driver
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public function user()
+  public function driver()
   {
-      return $this->belongsTo('App\User');
+      return $this->belongsTo('App\Driver');
   }
+  
 }

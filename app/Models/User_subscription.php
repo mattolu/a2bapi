@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
 
-class Bus extends Model
+class User_subscription extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,16 +13,16 @@ class Bus extends Model
      * @var array
      */
     protected $fillable = [
-        'bus_product_name', 'bus_plate_no', 'driver_id',
+        'user_id', 'tariff_plan', 'start_date', 'end_date', 'amount',
     ];
 
    /**
-     * A report belongs to a driver
+     * A user_sub belongs to a user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public function driver()
+  public function user()
   {
-      return $this->belongsTo('App\Driver');
+      return $this->belongsTo('App\User');
   }
 }

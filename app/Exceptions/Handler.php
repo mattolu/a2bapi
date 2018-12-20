@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,14 +47,30 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         if($e instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException){
-           // return response()->json([$e->getMessage()], $e->getStatusCode());
-           return json_encode([
-            'status'=>$e->getStatusCode(),
-            'message'=>$e->getMessage(),
-            
-          ], 401);
+          return response()->json([
+            'error'=>[
+            'status'=>401,
+            'message'=>'Unauthorized' ]
+          ]);
+        } 
+        if($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException){
+           return response()->json([
+            'error'=>[
+            'status'=>401,
+            'message'=>'HTTP method not allowed' ]
+          ]);
+         }
+         if ($e instanceof NotFoundHttpException){
+            return response()->json([
+                'error'=>[
+                'status'=>401,
+                'message'=>'Sorry, Resource not found', ]
+              ]);
         }
         return parent::render($request, $e);
     }
    
 }
+
+
+   

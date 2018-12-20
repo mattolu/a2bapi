@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-use App\Driver;
+
 use Illuminate\Http\Request;
-use App\Bus;
+use Validator;
+use App\Models\Bus;
+use App\Models\Driver;
 
 class BusController extends Controller
 {
@@ -15,14 +17,21 @@ class BusController extends Controller
     {
         //
     }
-    public function createNewBus(Request $request, $id)
+    public function createNewBus(Request $request)
     {
-        $response = $this->validate($request, [
-                'bus_product_name' => 'required',
-                'bus_plate_no' => 'required',
-               // 'driver_id' => 'required'
-        ]
-        );
+        $validator = Validator::make($request->all(),[
+            'bus_product_name' => 'required',
+            'bus_plate_no' => 'required',
+            //'driver_id' => 'required'
+        ]);
+
+        if($validator->fails()){
+            $response = array(  
+                                'response'=>$validator->messages(), 
+                                'success'=>false
+                            );
+            return $response;
+        }else
         
         $bus = new Bus();
         $bus->bus_product_name = $request->bus_product_name;
@@ -30,12 +39,12 @@ class BusController extends Controller
         $bus->driver_id= Driver::find($id)->id;
         $bus->save();
         
-        if($report->save()){
+        if($bus->save()){
             $response = response()->json(
                 [
                     'response' => [
                         'posted' => true,
-                     
+                        'message'=> 'Bus has been assigned successfully',
                         'status' => 200
 
                         ]
@@ -45,13 +54,11 @@ class BusController extends Controller
                 [
                     'response' => [
                         'posted' => false,
-                       
+                        'error'=> 'Bus not assigned',
                         'status' => 401
                         ]
                 ], 401);
         }
         return $response;
-    }
-
-   
+    }   
 }

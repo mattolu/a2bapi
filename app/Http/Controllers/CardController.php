@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\User;
+
 use Illuminate\Http\Request;
-use App\Card;
+use App\Models\User;
+use App\Models\Card;
 use Validator;
 
 class CardController extends Controller
@@ -18,9 +19,10 @@ class CardController extends Controller
     }
 
 
-    public function createCard(Request $request, $id)
+    public function createCard(Request $request)
     {
-        
+        $user_id = app('request')->get('authUser')->id;
+        //$user = User::find($user_id);
         $validator = Validator::make($request->all(), [
                 'card_number' => 'required|unique:cards',
                 'card_holder_name' => 'required',
@@ -35,7 +37,8 @@ class CardController extends Controller
                                 'success'=>false
                             );
             return $response;
-        }else{
+        }else{  
+            
               
                 $card = new Card();
                 $card->card_number = $request->card_number;
@@ -43,7 +46,7 @@ class CardController extends Controller
                 $card->expiry_month= $request->expiry_month;
                 $card->expiry_year= $request->expiry_year;
                 $card->cvv= $request->cvv;
-                $card->user_id= User::find($id)->id;
+                $card->user_id= $user_id;
             
                 $card->save();
                
@@ -51,33 +54,32 @@ class CardController extends Controller
          
         
         if($card->save()){
-           return $reponse = response()->json(
-                [
+           return $reponse = response()->json([
                     'card_status' => [
                         'posted' => true,
                         'status' => 200,
-                        'message' => 'Saved successfully',
-                        
-                        ]
-                ], 201);
+                        'message' => 'Card details saved successfully'    
+                                    ]
+                                            ]);
                 
         }else{
-          return  $response = response()->json(
-                [
+          return  $response = response()->json([
                     'response' => [
                         'posted' => false,
-                        'message' => 'UNSUCCESSFUL',
+                        'error' => 'Card not saved',
                         'status' => 401
-                        ]
-                ], 401);
+                                ]
+                                             ]);
           
         }
         
     }
 
-    public function getCards($id){
-        $user_cards = User::find($id)->cards()->get();
-        return $user_cards;
+    public function getCards(){
+        $user_id = app('request')->get('authUser')->id;
+        //$user = User::find($user_id);
+        return $user_cards = $user_id->cards()->get();
+        // $user_cards;
 
     }
 }

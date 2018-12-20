@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers;
-use App\Driver;
 use Illuminate\Http\Request;
-use App\Report;
-use App\ReportsImage;
 use Intervention\Image\Facades\Image;
+use App\Models\Driver;
+use App\Models\User;
+use App\Models\Report;
+use App\Models\ReportsImage;
 use Validator;
 
 class ReportController extends Controller
@@ -18,71 +19,67 @@ class ReportController extends Controller
     {
         //
     }
-    public function createNewDriverReport(Request $request, $id)
+    public function createNewDriverReport(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
                 'accident_address' => 'required',
                 'accident_report' => 'required',
-                //'driver_id' => 'required',
                  'image_path' => 'array',
                 'image_path.*'=> 'required|image|mimes:jpeg,png,jpg,gif,svg|max:8192'
         ]);
 
         if($validator->fails()){
-            $response = array(  
-                                'response'=>$validator->messages(), 
-                                'success'=>false
-                            );
-            return $response;
-        }else{
-                $data= array ();
-                $report = new Report();
-                $report->accident_address = $request->accident_address;
-                $report->accident_report= $request->accident_report;
-                $report->driver_id= Driver::find($id)->id;
+            return response()->json([
+                'error'=>[
+                    'success' => false,
+                    'status' =>400,
+                    'message' => $validator->errors()->all()
+                        ]]);
+            }else{
+                    $data= array ();
+                    $report = new Report();
+                    $report->accident_address = $request->accident_address;
+                    $report->accident_report= $request->accident_report;
+                    $report->driver_id=  app('request')->get('authDriver')->id;
+                    
+
+                    if ($request-> hasFile('image_path')){
+                    $images = $request -> file('image_path');
+                        foreach($images as $image){
+                            $filename = time().uniqid(). '.' . $image->getClientOriginalExtension();
+                            $filepath = storage_path('public/uploads/reports/drivers' . $filename);
+                            Image::make($image)->resize(500, 500)->save( $filepath );
+                        array_push($data, $filename);
+                        }
+                    $path = implode (',', $data);
+                    $report->image_path = $path;
+                    $report->save();
                 
-
-                if ($request-> hasFile('image_path')){
-                $images = $request -> file('image_path');
-                    foreach($images as $image){
-                        $filename = time().uniqid(). '.' . $image->getClientOriginalExtension();
-                        $filepath = storage_path('public/uploads/reports/drivers' . $filename);
-                        Image::make($image)->resize(500, 500)->save( $filepath );
-                    array_push($data, $filename);
-                    }
-                $path = implode (',', $data);
-                $report->image_path = $path;
-                $report->save();
-               
-            }
+                }
+                
             
-
-        
-        if($report->save()){
-            $response = response()->json(
-                [
-                    'response' => [
-                        'posted' => true,
-                       
-                        'customized_message' => 'The rescue team is on their way',
-                        'status' => 200
-
-                        ]
-                ], 201);
-        }else{
-            $response = response()->json(
-                [
-                    'response' => [
-                        'posted' => false,
-                       //'reportId' => $report->id,
-                        'customized_message' => 'Report not posted',
-                        'status' => 401
-                        ]
-                ], 401);
+            if($report->save()){
+                $response = response()->json(
+                    [
+                        'result' => [
+                            'success' => true,
+                            'message' => 'The rescue team is on their way',
+                            'status' => 200
+                            ]
+                    ]);
+            }else{
+                $response = response()->json(
+                    [
+                        'error' => [
+                            'success' => false,
+                            'message' => 'Report not posted',
+                            'status' => 401
+                            ]
+                    ]);
+            }
+            return $response;
         }
-        return $response;
-    }
     }
 
 /**
@@ -94,29 +91,29 @@ class ReportController extends Controller
     //     return ($driverReport);   
     // }
 
-    public function createNewUserReport(Request $request, $id)
+    public function createNewUserReport(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
                 'accident_address' => 'required',
                 'accident_report' => 'required',
-                //'user_id' => 'required',
                  'image_path' => 'array',
                 'image_path.*'=> 'required|image|mimes:jpeg,png,jpg,gif,svg|max:8192'
         ]);
 
         if($validator->fails()){
-            $response = array(  
-                                'response'=>$validator->messages(), 
-                                'success'=>false
-                            );
-            return $response;
+            return response()->json([
+                'error'=>[
+                    'success' => false,
+                    'status' =>400,
+                    'message' => $validator->errors()->all()
+                        ]]);
         }else{
                 $data= array ();
                 $report = new Report();
                 $report->accident_address = $request->accident_address;
                 $report->accident_report= $request->accident_report;
-                $report->driver_id= User::find($id)->id;
+                $report->driver_id = app('request')->get('authUser')->id;
                 
                 if ($request-> hasFile('image_path')){
                 $images = $request -> file('image_path');
@@ -132,39 +129,29 @@ class ReportController extends Controller
                
             }
             
-
-        
-        if($report->save()){
-            $response = response()->json(
-                [
-                    'response' => [
-                        'posted' => true,
-                        'customized_message' => 'The rescue team is on their way',
-                        'status' => 200
-
-                        ]
-                ], 201);
-        }else{
-            $response = response()->json(
-                [
-                    'response' => [
-                        'posted' => false,
-                        'customized_message' => 'Report not posted',
-                        'status' => 401
-                        ]
-                ], 401);
-        }
-        return $response;
+            if($report->save()){
+                $response = response()->json(
+                    [
+                        'result' => [
+                            'success' => true,
+                            'message' => 'The rescue team is on their way',
+                            'status' => 200
+                            ]
+                    ]);
+            }else{
+                $response = response()->json(
+                    [
+                        'error' => [
+                            'success' => false,
+                            'message' => 'Report not posted',
+                            'status' => 401
+                            ]
+                    ]);
+            }
+            return $response;
     }
     }
-/**
- * Getting the report of the user
- */
-    // public function getUserReports($id)
-    // {
-    //     $userReport = User::find($id)->reports()->get();
-    //     return ($userReport);   
-    // }
+
 
 
 

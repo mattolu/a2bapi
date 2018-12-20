@@ -21,106 +21,54 @@ $router->get('/key', function() {
 /** 
      * Driver's unprotected routes
 */ 
-//Register
-$router->post('/driver/register', 'DriverController@createNewDriver');
-//Login
-//$router->post('/driver/login', 'LoginController@driverLogin');
-$router->post('/driver/login', 'DriverLogin@driverLogin');
-//Attach bus to a driver
-$router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
-//Get reports
-//$router->get('/driverreport/{driver_id}', 'ReportCOntroller@getDriverReports');
+//Driver Register
+$router->post('/driver/register', 'DriverAuthController@register');
+//Driver Login
+$router->post('/driver/login', 'DriverAuthController@authenticate');
 
 /** 
      * User's unprotected routes
-*/ 
-//Register
-$router->post('/user/register', 'UserController@createNewUser');
-//Login
-$router->post('/user/login', 'UserLogin@userLogin');
-//Get reports
-//$router->get('/userreports/{user_id}', 'ReportCOntroller@getUserReports');
+*/
+//User Register
+$router->post('/user/register', 'UserAuthController@register');
+//User login
+$router->post('/user/login', 'UserAuthController@authenticate');
 
-
-$router->group(['middleware' => 'jwt.auth'], function($router){
-
-    /** 
-     * Driver's protected routes
-    */ 
-    // Driver Profile
-    $router->get('/driverprofile/{driver_id}', 'DriverController@getProfile');
-    //Driver Report
-    $router->post('/driver/report/{driver_id}', 'ReportController@createNewDriverReport');
-    // Driver Upload pix
-    $router->post('/uploadpix/{driver_id}', 'DriverController@updatePix');
-    // Get the driver profile
-    $router->get('/driverprofile/{driver_id}', 'DriverController@getProfile');
-
-    /** 
-     *   Users' Protected routes
-    */ 
-    // User create accident report
-    $router->post('/user/report/{user_id}', 'ReportController@createNewUserReport');
-    // Upload profile pix
-//    $router->post('/user/uploadpix/{user_id}', 'UserController@updatePix');
-    // Getting the user's profile
-    $router->get('/userprofile/{user_id}', 'UserController@getProfile');
-    //Subscription Protected routes
-    $router->post('/subscribe/{user_id}', 'User_subscriptionController@createSubscription');
-    //Create user's cards
-    $router->post('/user/card/{user_id}', 'CardController@createCard');
-    //Get user's cards
-    $router->get('/usercards/{user_id}', 'CardController@getCards');
-    
-});
-//Temporary route for image upload
-$router->post('/user/uploadpix/{user_id}', 'UserController@updatePix');
-
+//Attach bus to a driver
+$router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
 
 /**
- * USING A NEW MIDDLEWARE TO PROTECT THE ROUTE... CHECK BOOTSTRAP/APP
+ * Protected user routes
  */
-// $router->group(['middleware' => ['jwt.verify']], function($router){
+$router->group(
+    ['middleware' => 'jwt.auth:user',], 
+    function($router)  {
+        //User profile
+        $router->get('/userprofile', 'UserController@fetchUserDetails');
+        //Subscription Protected routes
+        $router->post('/subscribe', 'User_subscriptionController@createSubscription');
+        //Create user's cards
+        $router->post('/user/card', 'CardController@createCard');
+        //Get user's cards
+        $router->get('/usercards', 'CardController@getCards');
+        //User reports
+        $router->post('/user/report', 'ReportController@createNewUserReport');
+        //User update pix
+        $router->post('/user/uploadpix', 'UserController@updatePix');
+    }
+);
+/**
+ * Protected driver routes
+ */
+$router->group(
+    ['middleware' => 'jwt.auth:driver',], 
+    function($router)  {
+        //Driver profile
+        $router->get('/driverprofile', 'DriverController@fetchDriverDetails');
+        //Report accident
+        $router->post('/driver/report', 'ReportController@createNewDriverReport');
+        // Driver Upload pix
+        $router->post('/uploadpix', 'DriverController@updatePix');
+    }
+);
 
-//     /** 
-//      * Driver's protected verification routes
-//     */ 
-//     // Driver Profile
-//     $router->get('/driverprofile/{driver_id}', 'DriverController@getProfile');
-//     //Driver Report
-//     $router->post('/driver/report', 'ReportController@createNewDriverReport');
-//     // Driver Upload pix
-//     $router->post('/uploadpix/{driver_id}', 'DriverController@updatePix');
-//     // Get the driver profile
-//     $router->get('/driverprofile/{driver_id}', 'DriverController@getProfile');
-
-//     /** 
-//      *   Users' Protected routes
-//     */ 
-//     // User create accident report
-//     $router->post('/user/report', 'ReportController@createNewUserReport');
-//     // Upload profile pix
-//    $router->post('/user/uploadpix/{user_id}', 'UserController@updatePix');
-//     // Getting the user's profile
-//     $router->get('/userprofile/{user_id}', 'UserController@getProfile');
-//     //Subscription Protected routes
-//     $router->post('/subscribe/{user_id}', 'User_subscriptionController@createSubscription');
-//     //Create user's cards
-//     $router->post('/user/card/{user_id}', 'CardController@createCard');
-//     //Get user's cards
-//     $router->get('/usercards/{user_id}', 'CardController@getCards');
-    
-// });
-
-  
-
-//$router->get('/driver', ['middleware'=>'auth', 'uses'=>'DriverController@getDriver']);
-// $router->group(['middleware' => 'jwt.auth'], function($router){
-  
-//     // $router->post('/uploadpix/{driver_id}', 'DriverController@updatePix');
-//   });
-
-//$router->post('/resetpassword', 'LoginController@recoverPassword');
-//$router->post('/upload', 'ReportController@uploadimages');
-//$router->get('/profile/{driver_id}', 'DriverController@getProfile');
-//$router->get('/profile/{driver_id}', ['middleware'=>'jwt.auth', 'uses'=>'DriverController@getProfile']);
