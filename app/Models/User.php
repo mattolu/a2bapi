@@ -37,7 +37,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function reports() 
     {
-        return $this->hasMany('App\Report');
+        return $this->hasMany(Report::class);
     }
     public function userLocations() 
     {
@@ -46,12 +46,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function user_subscription() 
     {
-        return $this->hasMany('App\User_subscription');
+        return $this->hasMany(User_subscription::class);
     }
 
     public function cards() 
     {
-        return $this->hasMany('App\Card');
+        return $this->hasMany(Card::class);
     }
 
 

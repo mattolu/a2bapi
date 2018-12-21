@@ -44,7 +44,7 @@ class Driver extends Model implements AuthenticatableContract, AuthorizableContr
 
     public function bus() 
     {
-        return $this->hasOne('App\Bus');
+        return $this->hasOne(Bus::class);
     }
 
     public function getJWTIdentifier()

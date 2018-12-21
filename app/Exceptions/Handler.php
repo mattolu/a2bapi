@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\ErrorException;
 
 class Handler extends ExceptionHandler
 {
@@ -61,6 +62,13 @@ class Handler extends ExceptionHandler
           ]);
          }
          if ($e instanceof NotFoundHttpException){
+            return response()->json([
+                'error'=>[
+                'status'=>401,
+                'message'=>'Sorry, Resource not found', ]
+              ]);
+        }
+        if ($e instanceof ErrorException){
             return response()->json([
                 'error'=>[
                 'status'=>401,

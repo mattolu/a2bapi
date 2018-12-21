@@ -74,6 +74,15 @@ class User_subscriptionController extends Controller
         }
         
     }
+    public function getSubscription(){
+       
+            $user_id = app('request')->get('authUser')->id;
+            $user = User::find($user_id);
+            return $user_sub = $user->user_subscription()->get();
+            // $user_cards;
+    
+        
+    }
 }
 
    

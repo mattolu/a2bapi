@@ -23,7 +23,7 @@ class Report extends Model
    */
   public function driver()
   {
-      return $this->belongsTo('App\Driver');
+      return $this->belongsTo(Driver::class);
   }
   
 }

@@ -38,6 +38,7 @@ public $attributes;
                 'error' => 'Token not provided.'
                 ], 401);
             }
+            if ($guard == 'user'){
             try {
                 $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS512']);
                 }catch (ExpiredException $e) {
@@ -49,12 +50,24 @@ public $attributes;
                     'error' => 'Error while decoding'
                     ], 400);
                 }
-                if ($guard=='user'){
+
                 $user = User::find($credentials->sub);
                 $request->auth = $user;
                 $request->attributes->add(['authUser' => $user]);
-                }else{
-                    $driver = Driver::find($credentials->sub);
+                }
+            if($guard == 'driver'){
+               try {
+                $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS512']);
+                }catch (ExpiredException $e) {
+                    return response()->json([
+                    'error' => 'Provided token is expired.'
+                    ], 400);
+                } catch (\Exception $e) {
+                    return response()->json([
+                    'error' => 'Error while decoding'
+                    ], 400);
+                }
+                    $driver = Driver::find($credentials->driver_id);
                     $request->auth = $driver;
                     $request->attributes->add(['authDriver' => $driver]);
                 }

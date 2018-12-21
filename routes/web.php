@@ -45,8 +45,13 @@ $router->group(
     function($router)  {
         //User profile
         $router->get('/userprofile', 'UserController@fetchUserDetails');
+        //User profile update
+        $router->post('/user/update', 'UserController@updateProfile');
+        
         //Subscription Protected routes
         $router->post('/subscribe', 'User_subscriptionController@createSubscription');
+        //Get User subscription
+        $router->get('/usersubscriptions', 'User_subscriptionController@getSubscription');
         //Create user's cards
         $router->post('/user/card', 'CardController@createCard');
         //Get user's cards
@@ -55,6 +60,10 @@ $router->group(
         $router->post('/user/report', 'ReportController@createNewUserReport');
         //User update pix
         $router->post('/user/uploadpix', 'UserController@updatePix');
+        //User location
+        $router->post('/user/location', 'UserLocationController@createLocation');
+         //Get User location
+         $router->get('/userlocation', 'UserLocationController@getUserLocation');
     }
 );
 /**

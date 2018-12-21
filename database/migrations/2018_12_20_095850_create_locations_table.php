@@ -13,7 +13,7 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('locations', function (Blueprint $table) {
+        Schema::create('user_locations', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->string('from');
             $table->string('to');
@@ -21,7 +21,7 @@ class CreateLocationsTable extends Migration
             $table->timestamps();
         });
         
-        Schema::table ('locations', function(Blueprint $table){
+        Schema::table ('User_locations', function(Blueprint $table){
             $table
                     ->foreign('user_id')
                     ->references('id')

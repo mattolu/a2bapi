@@ -8,7 +8,6 @@ use Illuminate\Validation\ValidationException;
 use Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Firebase\JWT\JWT;
 
 
 class UserLocationController extends Controller{
@@ -21,7 +20,7 @@ class UserLocationController extends Controller{
     {
         //
     }
-    public function createLocation(Request $request, $id)
+    public function createLocation(Request $request)
     {
         $response = $this->validate($request, [
                 'from' => 'required',
@@ -39,22 +38,32 @@ class UserLocationController extends Controller{
         if($report->save()){
             $response = response()->json(
                 [
-                    'result' => [
+                 
                         'success' => true,
                         'message' => 'Location saved',
                         'status' => 200
-                        ]
+                        
                 ]);
         }else{
             $response = response()->json(
                 [
-                    'error' => [
+                  
                         'success' => false,
                         'message' => 'Location not saved',
                         'status' => 401
-                        ]
+                        
                 ]);
         }
         return $response;
     }
+
+    public function getUserLocation(){
+       
+        $user_id = app('request')->get('authUser')->id;
+        $user = User::find($user_id);
+        return $user_loc = $user->userLocation()->get();
+        // $user_cards;
+
+    
+}
 }

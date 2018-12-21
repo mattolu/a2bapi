@@ -25,7 +25,7 @@ class ReportController extends Controller
         $validator = Validator::make($request->all(), [
                 'accident_address' => 'required',
                 'accident_report' => 'required',
-                 'image_path' => 'array',
+                 'image_path' => 'required|array',
                 'image_path.*'=> 'required|image|mimes:jpeg,png,jpg,gif,svg|max:8192'
         ]);
 
@@ -52,6 +52,7 @@ class ReportController extends Controller
                             Image::make($image)->resize(500, 500)->save( $filepath );
                         array_push($data, $filename);
                         }
+                      
                     $path = implode (',', $data);
                     $report->image_path = $path;
                     $report->save();

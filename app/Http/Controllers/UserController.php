@@ -74,6 +74,62 @@ class UserController extends  Controller{
                 }
         }
     }
+
+    public function updateProfile(Request $request){
+        $user_id = app('request')->get('authUser')->id;
+        $user = User::find($user_id);
+        $validator = Validator::make($request->all(), [
+            'full_name' => 'required',
+            'user_name' => 'required',
+            'phone_number' => 'required',
+        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'error'=>[
+                        'success' => false,
+                        'status' =>400,
+                        'message' => $validator->errors()->all()
+                            ]]);
+                }
+                try{
+    
+                    $hasher = app()->make('hash');
+    
+                    $user = new User();
+                    $user->full_name = $request->full_name;
+                    $user->user_name = $request->user_name;
+                    $user->email = $request->email;
+                    $user->phone_number = $request->phone_number;
+                    $user->password = $hasher->make($request->password);
+                    $filename = '';
+    
+                    if($request->hasFile('profile_pix')){
+                        $profile_pix = $request->file('profile_pix');
+                        $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
+                        Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/profiles/users/' . $filename ) );
+                    }
+                        
+                    $user->profile_pix = $filename;
+                    $user->save();
+                    //unset($user->password);
+                    return json_encode([
+                                'result'=> [
+                                        'success'=> true,
+                                        'status'=>200,
+                                        'message'=> 'Profile update successful',
+                                        'user_data'=>$user,
+                                        // 'token' => $this->jwt($user)
+                                    ]]);    
+            
+                    
+                    }catch(\Illuminate\Database\QueryException $ex){
+                    return json_encode([
+                        'status'=>500,
+                        'registered'=>false,
+                        'message'=>$ex->getMessage()
+                        ]);  
+                }
+            }
 }
 
        //Alternative way of getting User ig i decide notot use the middleware pasing the variable

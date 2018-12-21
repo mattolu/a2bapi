@@ -39,7 +39,7 @@ class CardController extends Controller
             return $response;
         }else{  
             
-              
+              try{
                 $card = new Card();
                 $card->card_number = $request->card_number;
                 $card->card_holder_name= $request->card_holder_name;
@@ -50,7 +50,7 @@ class CardController extends Controller
             
                 $card->save();
                
-            }
+            
          
         
         if($card->save()){
@@ -61,24 +61,32 @@ class CardController extends Controller
                         'message' => 'Card details saved successfully'    
                                     ]
                                             ]);
-                
-        }else{
-          return  $response = response()->json([
-                    'response' => [
-                        'posted' => false,
-                        'error' => 'Card not saved',
-                        'status' => 401
-                                ]
-                                             ]);
+                    }
+                 }catch(\Illuminate\Database\QueryException $ex){
+                    return json_encode([
+                        'status'=>500,
+                        'registered'=>false,
+                        'message'=>$ex->getMessage()
+                        ]);  
+                }
+            }   
+        // }else{
+        //   return  $response = response()->json([
+        //             'response' => [
+        //                 'posted' => false,
+        //                 'error' => 'Card not saved',
+        //                 'status' => 401
+        //                         ]
+        //                                      ]);
           
-        }
+        // }
         
     }
 
     public function getCards(){
         $user_id = app('request')->get('authUser')->id;
-        //$user = User::find($user_id);
-        return $user_cards = $user_id->cards()->get();
+        $user = User::find($user_id);
+        return $user_cards = $user->cards()->get();
         // $user_cards;
 
     }
