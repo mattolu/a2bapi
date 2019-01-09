@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Driver;
+//use Illuminate\Contracts\Filesystem\Factory;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 
@@ -59,6 +60,8 @@ class UserAuthController extends BaseController
     * @return array
     * @throws \Illuminate\Validation\ValidationException
     */
+
+ 
     public function register(Request $request)
     {
     $validator = Validator::make($request->all(), [
@@ -91,7 +94,7 @@ class UserAuthController extends BaseController
                 if($request->hasFile('profile_pix')){
                     $profile_pix = $request->file('profile_pix');
                     $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                    Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/profiles/users/' . $filename ) );
+                    Image::make($profile_pix)->resize(300, 300)->save( storage_path('app/public/profiles/users/' . $filename ) );
                 }
                     
                 $user->profile_pix = $filename;
@@ -153,5 +156,11 @@ class UserAuthController extends BaseController
                     'message' => 'Email or password is wrong.',
                     'status' => 400
             ]]);
+    }
+    public function update(Request $request)
+    {
+        $path = $request->file('avatar')->store('avatars');
+
+        return $path;
     }
 }

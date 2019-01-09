@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    // 'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    // 'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+    // 'port' => env('MAIL_PORT', 587),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,10 +55,10 @@ return [
     |
     */
 
-    'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
-    ],
+    // 'from' => [
+    //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+    //     'name' => env('MAIL_FROM_NAME', 'Example'),
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    // 'username' => env('MAIL_USERNAME'),
 
-    'password' => env('MAIL_PASSWORD'),
+    // 'password' => env('MAIL_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
@@ -99,7 +99,7 @@ return [
     |
     */
 
-    'sendmail' => '/usr/sbin/sendmail -bs',
+    // 'sendmail' => '/usr/sbin/sendmail -bs',
 
     /*
     |--------------------------------------------------------------------------
@@ -111,6 +111,24 @@ return [
     | of the emails. Or, you may simply stick with the Laravel defaults!
     |
     */
+
+
+    // return [ 
+            
+            'driver' => 'smtp',
+            
+            'host' => 'smtp.sendgrid.net',
+            
+            'port' => 587,
+            
+               // 'encryption' => 'tls', 
+            
+            'username' => env('MAIL_USERNAME'),
+            
+            'password' => env('MAIL_PASSWORD'),
+            
+            'sendmail' => '/usr/sbin/sendmail -bs' ,
+    
 
     'markdown' => [
         'theme' => 'default',

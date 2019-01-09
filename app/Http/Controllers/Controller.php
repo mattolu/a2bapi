@@ -13,12 +13,5 @@ class Controller extends BaseController
     {
         return response(["success"=> false , "message" => $errors],401);
     }
-    function __construct()
-{
-app('config')->set('jwt.user', Driver::class);
-app('config')->set('auth.providers', ['users' => [
-'driver' => 'eloquent',
-'model' => Driver::class,
-]]);
-}
+
 }

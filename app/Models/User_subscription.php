@@ -25,4 +25,8 @@ class User_subscription extends Model
   {
       return $this->belongsTo(User::class);
   }
+  public function card()
+  {
+      return $this->belongsTo(Card::class);
+  }
 }

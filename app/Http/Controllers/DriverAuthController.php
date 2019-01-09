@@ -2,11 +2,15 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Response;
 use Validator;
+use App\Repositories\UserRepository;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailable;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Driver;
+use App\Mail\RegisterConfirmation;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 
@@ -17,6 +21,7 @@ class DriverAuthController extends BaseController
     *
     * @var \Illuminate\Http\Request
     */
+    public $attributes;
     private $request;
     /**
     * Create a new controller instance.
@@ -85,6 +90,9 @@ class DriverAuthController extends BaseController
                 $characters_10 = "23456789ABCDEFHJKLMNPRTVWXYZabcdefghijklmnopqrstuvwxyz";
                 // Defining characters for the driver's password.
                 $password = unique_link(10, $characters_10); // driver's password generated
+                $request->attributes->add(['password' => $password]);
+               
+              
                 var_dump($password);
 
                 
@@ -109,19 +117,28 @@ class DriverAuthController extends BaseController
                         if($request->hasFile('profile_pix')){
                             $profile_pix = $request->file('profile_pix');
                             $filename = time().uniqid(). '.' . $profile_pix->getClientOriginalExtension();
-                            Image::make($profile_pix)->resize(300, 300)->save(  storage_path('public/uploads/profiles/drivers/' . $filename ) );
+                           Image::make($profile_pix)->resize(300, 300)->save( storage_path('app/public/profiles/drivers/' . $filename ) );
+                            //Image::make($profile_pix)->resize(300, 300)->save( public_path('/profiles/drivers/' . $filename ) );
                         }
-                            
+                        $request->attributes->add(['email' => $request->email]);
+                       // $request->attributes->add(['lastname' => $request->last_name]);
                         $driver->profile_pix = $filename;
                         $driver->save();
 
-                    
+                        $data = ['email'=> $request->email,'password' => $password, 'lastname' =>$request->last_name, 'firstname'=>$request->first_name];
+
+                        Mail::send('RegisterConfirmationEmail', $data, function($message){
+                            $message->from ( 'donotreply@a2b.com', 'a2bTest' );
+                            $message->to(app('request')->get('email'));
+                            $message->subject('Registration Confirmation');
+                        });
                         return json_encode([
                             'driver_details'=>[
                                             'status'=>200,
                                             'registered'=>true,
-                                            'message'=> 'Registration Successsful',
-                                            'driver_data'=>$driver
+                                            'message'=> 'Registration Successsful! Check your mail to complete your registration',
+                                            'driver_data'=>$driver,
+
                                             ]]);     
                     }catch(\Illuminate\Database\QueryException $ex){
                         return json_encode([
@@ -131,6 +148,8 @@ class DriverAuthController extends BaseController
                                             'message'=>$ex->getMessage()
                                             ]]);  
                     } 
+                    //Send email to the driver with the login details
+                    //Mail::to($request->email)->send(new RegisterConfirmation());
             }
 
             /**

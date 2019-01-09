@@ -48,7 +48,7 @@ class ReportController extends Controller
                     $images = $request -> file('image_path');
                         foreach($images as $image){
                             $filename = time().uniqid(). '.' . $image->getClientOriginalExtension();
-                            $filepath = storage_path('public/uploads/reports/drivers' . $filename);
+                            $filepath = storage_path('app/public/reports/drivers/' . $filename);
                             Image::make($image)->resize(500, 500)->save( $filepath );
                         array_push($data, $filename);
                         }
@@ -120,7 +120,7 @@ class ReportController extends Controller
                 $images = $request -> file('image_path');
                     foreach($images as $image){
                         $filename = time().uniqid(). '.' . $image->getClientOriginalExtension();
-                        $filepath = storage_path('public/uploads/reports/users' . $filename);
+                        $filepath = storage_path('app/public/reports/users/' . $filename);
                         Image::make($image)->resize(500, 500)->save( $filepath );
                     array_push($data, $filename);
                     }

@@ -25,21 +25,32 @@ $router->get('/key', function() {
 $router->post('/driver/register', 'DriverAuthController@register');
 //Driver Login
 $router->post('/driver/login', 'DriverAuthController@authenticate');
-
+$router->post('/driver/reset', 'ForgotPasswordController@generateResetToken');
 /** 
      * User's unprotected routes
 */
 //User Register
 $router->post('/user/register', 'UserAuthController@register');
+$router->post('/update', 'UserAuthController@update');
 //User login
 $router->post('/user/login', 'UserAuthController@authenticate');
 
 //Attach bus to a driver
 $router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
 
+//User origin
+$router->post('/user/origin1', 'UserLocationController@createOrigin');
+//Get User origin
+$router->get('/userorigin1', 'UserLocationController@getOrigin');
+//User destination
+$router->post('/user/destination1', 'UserLocationController@createDestination');
+//Get User desination
+$router->get('/userdestination1', 'UserLocationController@getDestination');
+
 /**
  * Protected user routes
  */
+
 $router->group(
     ['middleware' => 'jwt.auth:user',], 
     function($router)  {
@@ -51,7 +62,10 @@ $router->group(
         //Subscription Protected routes
         $router->post('/subscribe', 'User_subscriptionController@createSubscription');
         //Get User subscription
-        $router->get('/usersubscriptions', 'User_subscriptionController@getSubscription');
+        $router->get('/usersubscription', 'User_subscriptionController@getSubscription');
+        //Get all user's subscription
+        $router->get('/allusersubscriptions', 'User_subscriptionController@getSubscriptionAll');
+        
         //Create user's cards
         $router->post('/user/card', 'CardController@createCard');
         //Get user's cards
@@ -61,9 +75,15 @@ $router->group(
         //User update pix
         $router->post('/user/uploadpix', 'UserController@updatePix');
         //User location
-        $router->post('/user/location', 'UserLocationController@createLocation');
+        $router->post('/user/origin', 'UserLocationController@createOrigin');
          //Get User location
-         $router->get('/userlocation', 'UserLocationController@getUserLocation');
+        $router->get('/userorigin', 'UserLocationController@getOrigin');
+         //User location
+        $router->post('/user/destination', 'UserLocationController@createDestination');
+        //Get User location
+        $router->get('/userdestination', 'UserLocationController@getDestination');
+         // Contact us page
+        $router->post('/contactus', 'ContactController@contactUs');
     }
 );
 /**

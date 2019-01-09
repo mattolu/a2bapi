@@ -1,0 +1,163 @@
+html, body{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.container{
+	background-color: #f1f0f0;
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	height:100%;
+	margin: 0;
+	padding: 0;
+}
+h5{
+	line-height: 20px;
+}
+.email_container{
+	background-color:#fff;
+	width:35%;
+	margin-top:5%;
+	max-height: 80%;
+	border-radius:10px;
+}
+.span{
+	color:#2943b9;
+	font-weight: 800;
+}
+.write_up_short{
+	text-align: left;	
+}
+.write_up_long{
+	text-align: justify;	
+	min-height:10vh;
+}
+.email_head{
+	background-color: #2943b9;	
+	height:100px;
+	width: 100%;
+	padding-top:5%;
+	text-align: center;
+	border-radius: 10px 10px 0 0;
+	
+}
+.left_side{
+	float:left;
+}
+.email_body{
+	background-color: #fff;	
+	height: calc(100% - 160px);
+	width: 100%;
+	padding:10% 10%;
+	padding-top:5%;
+	text-align: center;
+}
+.email_foot{
+	background-color: #f6f6f6;	
+	height:60px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	border-radius: 0px 0px 10px 10px;
+
+	
+}
+
+.btn:hover{
+	background-color: transparent;
+	color: #fff;
+}
+
+.list{
+	float: left;
+	padding: 25px;
+	padding-top: 0;
+}
+
+.social{
+		list-style: none;
+		margin: 10px;
+		padding: 5px;
+}
+
+#fb{
+	height: 30px;
+	width: 30px;
+	border-radius: 20px;
+	background-color: #3b5998;
+	border:0;
+	padding-top: 8px;
+}
+#ld{
+	height: 30px;
+	width: 30px;
+	border-radius: 20px;
+	background-color: #0077b5;
+	border:0;
+	padding-top: 8px;
+	padding-left: 9px;
+}
+#tw{
+	height: 30px;
+	width: 30px;
+	border-radius: 20px;
+	background-color: #08a0e9;
+	border:0;
+	padding-top: 8px;
+	padding-left: 9px;
+}
+.table_div{
+	padding:5% 20%;
+}
+@media(max-height: 1370px){
+	.email_container{
+		background-color:#fff;
+		width:75%;
+		margin-top:10%;
+		max-height: 65%;
+		border-radius:10px;
+	}
+	.table_div{
+		padding:5% 0%;
+		width:100%;
+		font-size:10px;
+		margin-top:-20px;
+	}
+}
+@media(max-width: 769px){
+	.email_container{
+		background-color:#fff;
+		width:75%;
+		margin-top:5%;
+		max-height: 80%;
+		border-radius:10px;
+	}
+	.table_div{
+		padding:5% 0%;
+		width:100%;
+		font-size:10px;
+		margin-top:-20px;
+	}
+}
+@media(max-width: 370px){
+	.email_container{
+		background-color:#fff;
+		width:85%;
+		margin-top:3%;
+		max-height: 95%;
+		border-radius:10px;
+	}
+	.table_div{
+		padding:5% 0%;
+		width:100%;
+		font-size:10px;
+		margin-top:-20px;
+	}
+}
+

@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordInterface;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract  
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordInterface
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable, CanResetPasswordTrait, Notifiable, Authorizable;
 
     /**
      * The attributes that are mass assignable.
@@ -39,12 +42,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(Report::class);
     }
-    public function userLocations() 
+    public function UserDestinationLocations() 
     {
-        return $this->hasMany(UserLocation::class);
+        return $this->hasMany(UserDestinationLocation::class);
+    }
+    public function UserOriginLocations() 
+    {
+        return $this->hasMany(UserOriginLocation::class);
     }
 
-    public function user_subscription() 
+    public function user_subscriptions() 
     {
         return $this->hasMany(User_subscription::class);
     }

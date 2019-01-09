@@ -36,7 +36,8 @@ $app->withEloquent();
 $app->configure('services');
 $app->configure('mail');
 $app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class); 
-
+$app->register(\Illuminate\Notifications\NotificationServiceProvider::class); 
+$app->alias ('mailer', \Illuminate\Contracts\Mail\Mailer::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class); 
 
 /*
@@ -87,7 +88,10 @@ $app->routeMiddleware([
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class
  ]);
-
+//  $app->singleton(
+//    [ Illuminate\Contracts\Filesystem\Factory::class,
+//    App\Filesystem\Factory::class]
+// );
 
 /*
 |--------------------------------------------------------------------------
