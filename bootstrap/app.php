@@ -34,6 +34,7 @@ $app->withFacades(true, [Intervention\Image\Facades\Image::class=>  'Image']);
 
 $app->withEloquent();
 $app->configure('services');
+$app->configure('auth');
 $app->configure('mail');
 $app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class); 
 $app->register(\Illuminate\Notifications\NotificationServiceProvider::class); 

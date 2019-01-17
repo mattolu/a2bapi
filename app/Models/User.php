@@ -6,6 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\PasswordReset; 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
@@ -71,4 +72,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
+      /**
+   * Send the password reset notification.
+   *
+   * @param  string  $token
+   * @return void
+   */
+  public function sendPasswordResetNotification($token)
+  {
+      $this->notify(new PasswordReset($token));
+  }
 }

@@ -55,10 +55,10 @@ return [
     |
     */
 
-    // 'from' => [
-    //     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-    //     'name' => env('MAIL_FROM_NAME', 'Example'),
-    // ],
+    'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'donotreply@a2b.com'),
+        'name' => env('MAIL_FROM_NAME', 'a2b tech team'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -121,7 +121,7 @@ return [
             
             'port' => 587,
             
-               // 'encryption' => 'tls', 
+            // 'encryption' => 'tls', 
             
             'username' => env('MAIL_USERNAME'),
             

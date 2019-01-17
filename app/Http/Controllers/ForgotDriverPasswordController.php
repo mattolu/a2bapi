@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
-use App\Models\User;
+use App\Models\Driver;
 use DB;
 use Validator;
 
-class ForgotPasswordController extends BaseController
+class ForgotDriverPasswordController extends BaseController
 {   
     // use ResetsPasswords;
     // use SendsPasswordResetEmails;
@@ -48,12 +48,12 @@ class ForgotPasswordController extends BaseController
                    'message' => $validator->errors()->all()
                        ]
                     ],400);
-       }else{
+       } else{
            //if validation is successful, check the User DB 
            $email = $request->email;
-           $user = User::where ('email', $request->input('email'))->first();
+           $driver = Driver::where ('email', $request->input('email'))->first();
            
-           if (!$user){
+           if (!$driver){
 
             return response()->json([
                 'error' =>[
@@ -64,7 +64,7 @@ class ForgotPasswordController extends BaseController
 
            }
            //Token generation and send to the mail
-            $token = $this->broker()->createToken($user);
+            $token = $this->broker()->createToken($driver);
             $response = $this->broker()->sendResetLink($request->only('email'));
 
             return $response == Password::RESET_LINK_SENT
@@ -81,7 +81,7 @@ class ForgotPasswordController extends BaseController
                     'message' => 'Unable to send reset link', 
                     'status' => 401], 
                 ], 401);
-                }
+        }
         
     }
 
@@ -108,15 +108,16 @@ class ForgotPasswordController extends BaseController
             $reset = DB::table("password_resets")->where('email', $request->email)->first();
             if($reset){
                     if($this->hasher->check($request->token, $reset->token)){
-                        $user = User::where('email', '=', $request->email)->first();
-                        $user->password = app('hash')->make($request->password);
-                            $user->save();
-                            $reset_query->delete();
-                            return response()->json([
-                                'result' => [
-                                    'success' => true,
-                                    'message' => 'Password reset successfully',
-                                    'status' => 201
+                        $driver = Driver::where('email', '=', $request->email)->first();
+                        $driver->password = app('hash')->make($request->password);
+                        $driver->flag_changed_password = true;
+                        $driver->save();
+                        $reset_query->delete();
+                        return response()->json([
+                            'result' => [
+                                'success' => true,
+                                'message' => 'Password reset successfully',
+                                'status' => 201
                                 ]
                             ], 201);
                     }
@@ -152,6 +153,6 @@ class ForgotPasswordController extends BaseController
    
     protected function broker()
     {
-        return Password::broker('users');
+        return Password::broker('drivers');
     }
 }

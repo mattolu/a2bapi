@@ -25,7 +25,10 @@ $router->get('/key', function() {
 $router->post('/driver/register', 'DriverAuthController@register');
 //Driver Login
 $router->post('/driver/login', 'DriverAuthController@authenticate');
-$router->post('/driver/reset', 'ForgotPasswordController@generateResetToken');
+//Send token to mail
+$router->post('/senddrivertoken',  'ForgotDriverPasswordController@generateResetToken');
+//Reset user password
+$router->post('/driverreset/{token}', 'ForgotDriverPasswordController@resetPassword');
 /** 
      * User's unprotected routes
 */
@@ -34,7 +37,10 @@ $router->post('/user/register', 'UserAuthController@register');
 $router->post('/update', 'UserAuthController@update');
 //User login
 $router->post('/user/login', 'UserAuthController@authenticate');
-
+//Send token to mail
+$router->post('/sendtoken',  'ForgotPasswordController@generateResetToken');
+//Reset user password
+$router->post('/reset/{token}', 'ForgotPasswordController@resetPassword');
 //Attach bus to a driver
 $router->post('/driver/bus/{driver_id}', 'BusController@createNewBus');
 

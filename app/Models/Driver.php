@@ -5,13 +5,17 @@ namespace App\Models;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\PasswordDriverReset;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordInterface;
 
 
-class Driver extends Model implements AuthenticatableContract, AuthorizableContract
+class Driver extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordInterface
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable, CanResetPasswordTrait, Notifiable, Authorizable;
     //protected $guard = 'driver';
     /**
      * The attributes that are mass assignable.
@@ -56,4 +60,8 @@ class Driver extends Model implements AuthenticatableContract, AuthorizableContr
     {
         return [];
     }
+    public function sendPasswordResetNotification($token)
+  {
+      $this->notify(new PasswordDriverReset($token));
+  }
 }
